@@ -47,14 +47,14 @@
 
         /* Gradient text effect */
         .gradient-text {
-            background: linear-gradient(90deg, #A78BFA, #E0E0E0); /* Updated purple-to-white gradient */
+            background: linear-gradient(90deg, #A78BFA, #E0E0E0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             color: transparent;
         }
 
-        /* NEW: Glowing text animation */
+        /* Glowing text animation */
         @keyframes textGlow {
             0%, 100% { text-shadow: 0 0 8px rgba(167, 139, 250, 0.4), 0 0 12px rgba(167, 139, 250, 0.3); }
             50% { text-shadow: 0 0 16px rgba(167, 139, 250, 0.8), 0 0 24px rgba(167, 139, 250, 0.6); }
@@ -63,23 +63,23 @@
             animation: textGlow 4s ease-in-out infinite;
         }
         
-        /* New CTA Button Styles */
+        /* CTA Button Styles */
         .cta-base {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            font-weight: 700; /* Bold */
+            font-weight: 700;
             text-align: center;
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
 
         .cta-primary {
-            background-color: #374151; /* Dark gray background */
-            color: #F9FAFB; /* Almost white text */
-            border-color: #4B5563; /* Subtle border */
+            background-color: #374151;
+            color: #F9FAFB;
+            border-color: #4B5563;
         }
 
-        .cta-primary:hover {
+        .cta-primary:hover, .cta-secondary:hover { 
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             border-image-slice: 1;
@@ -91,11 +91,9 @@
             color: #E5E7EB;
             border-color: #4B5563;
         }
-
+        
         .cta-secondary:hover {
-            background-color: #374151;
-            border-color: #9CA3AF;
-            transform: translateY(-3px);
+            background-color: #374151; 
         }
         
         /* Custom border with gradient */
@@ -106,25 +104,30 @@
             box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
         }
 
-        /* Partner logo scrolling animation */
+        /* --- Partner logo scrolling animation --- */
         .scroller {
             max-width: 100%;
             overflow: hidden;
-            -webkit-mask-image: linear-gradient(90deg, transparent, #fff 20%, #fff 80%, transparent);
-            mask-image: linear-gradient(90deg, transparent, #fff 20%, #fff 80%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #fff 15%, #fff 85%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #fff 15%, #fff 85%, transparent);
         }
         .scroller-inner {
             display: flex;
-            gap: 4rem; /* Increased gap for fewer logos */
+            flex-wrap: nowrap;
             width: max-content;
             animation: scroll 30s linear infinite;
         }
+        .scroller:hover .scroller-inner {
+            animation-play-state: paused;
+        }
         .scroller-inner img {
-            height: 60px; /* Increased from 40px */
-            max-width: 180px; /* Optional: adjust max-width as well */
-            object-fit: contain; /* Ensure logos fit well */
+            height: 60px; /* Adjusted for mobile */
+            max-width: 150px; /* Adjusted for mobile */
+            object-fit: contain;
+            margin: 0 1.5rem; 
+            flex-shrink: 0;
             filter: grayscale(1) brightness(1.5);
-            opacity: 0.6;
+            opacity: 0.7;
             transition: all 0.3s ease;
         }
         .scroller-inner img:hover {
@@ -132,10 +135,13 @@
             opacity: 1;
             transform: scale(1.1);
         }
-
+        
         @keyframes scroll {
-            to {
-                transform: translateX(calc(-50% - 2rem)); /* Adjusted for new gap */
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
             }
         }
 
@@ -169,7 +175,7 @@
             background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0) 70%);
             opacity: 0;
             transition: opacity 0.5s ease;
-            pointer-events: none; /* FIX: Allows clicking through this layer to the form below */
+            pointer-events: none;
         }
         .gamified-card:hover {
             transform: translateY(-8px);
@@ -182,8 +188,8 @@
 
         /* Highlighted Feature Card */
         .highlight-card {
-             box-shadow: 0 0 25px rgba(167, 139, 250, 0.2);
-             animation: pulseGlow 4s infinite alternate;
+            box-shadow: 0 0 25px rgba(167, 139, 250, 0.2);
+            animation: pulseGlow 4s infinite alternate;
         }
         @keyframes pulseGlow {
             from { box-shadow: 0 0 15px rgba(167, 139, 250, 0.2); }
@@ -213,8 +219,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: rgba(0,0,0,0.5);
             border-radius: 50%;
             display: flex;
@@ -233,11 +239,11 @@
 <body class="antialiased">
     <canvas id="background-canvas"></canvas>
 
-    <header class="sticky top-0 z-50 bg-[#1C1B22]/80 backdrop-blur-lg border-b border-white/10">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-50 bg-[#1C1B22]/80 backdrop-blur-lg border-b border-white/10">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <a href="#" class="flex items-center space-x-2">
-                <img src="https://i.postimg.cc/9F0kL0V7/bigfiglogowhite.png" alt="BigFig.AI Logo" class="h-10 w-10">
-                <span class="text-2xl font-bold text-white">BigFig.AI</span>
+                <img src="https://i.postimg.cc/9F0kL0V7/bigfiglogowhite.png" alt="BigFig.AI Logo" class="h-9 w-9 sm:h-10 sm:w-10">
+                <span class="text-xl sm:text-2xl font-bold text-white">BigFig.AI</span>
             </a>
             
             <div class="hidden md:flex items-center space-x-6">
@@ -249,13 +255,34 @@
                     Book a demo
                 </a>
             </div>
+
+            <div class="md:hidden">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path :class="{'hidden': mobileMenuOpen, 'inline-flex': !mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        <path :class="{'hidden': !mobileMenuOpen, 'inline-flex': mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
         </nav>
+
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden" @click.away="mobileMenuOpen = false">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+                <a href="#about-product" @click="mobileMenuOpen = false" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About Product</a>
+                <a href="#features" @click="mobileMenuOpen = false" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="#pricing" @click="mobileMenuOpen = false" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
+                <a href="#faq" @click="mobileMenuOpen = false" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">FAQs</a>
+                <a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="cta-base cta-primary w-full mt-4">
+                    Book a demo
+                </a>
+            </div>
+        </div>
     </header>
 
     <main>
-        <section class="py-20 md:pb-10 md:pt-28">
+        <section class="py-16 md:py-20 lg:pt-28 lg:pb-10">
             <div class="container mx-auto px-6">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div class="text-center lg:text-left">
                         <div class="inline-flex items-center gap-x-3 bg-gradient-to-r from-gray-900 via-purple-950/30 to-gray-900 backdrop-blur-sm border border-purple-500/30 rounded-full px-4 py-2 mb-6 shadow-lg shadow-purple-500/10">
                             <svg class="w-5 h-5 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -263,12 +290,12 @@
                             </svg>
                            <span class="text-sm font-medium text-gray-200">Agentic AI powering e-commerce and brands</span>
                         </div>
-                        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white">
                             Connect Data.<br>
                             Unlock Insights.<br>
                             <span class="gradient-text whitespace-nowrap">Drive Outcomes.</span>
                         </h1>
-                        <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0">
+                        <p class="mt-6 text-lg text-gray-400 max-w-xl mx-auto lg:mx-0">
                             Get actionable growth tips for channels like Amazon, Shopify & more, right to your workspace email or Slack with one-click integrations.
                         </p>
                         <div class="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4">
@@ -281,7 +308,7 @@
                         </div>
                     </div>
                     <div class="video-placeholder">
-                         <img src="https://placehold.co/1280x720/111827/374151?text=Product+Demo" class="absolute top-0 left-0 w-full h-full object-cover" alt="Product Video Thumbnail">
+                       <img src="https://placehold.co/1280x720/111827/374151?text=Product+Demo" class="absolute top-0 left-0 w-full h-full object-cover" alt="Product Video Thumbnail">
                         <div class="play-button">
                             <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3.222v13.556c0 .467.533.711.911.422l11.111-6.778a.5.5 0 000-.844L4.911 2.8c-.378-.289-.911-.045-.911.422z"></path></svg>
                         </div>
@@ -289,7 +316,7 @@
                 </div>
 
                 <div class="mt-20 text-center">
-                    <h3 class="text-3xl font-semibold text-gray-300 leading-relaxed">
+                    <h3 class="text-2xl md:text-3xl font-semibold text-gray-300 leading-relaxed">
                         We don’t just generate insights.<br>
                         <span class="gradient-text font-bold animated-text-glow">We engineer intelligence.</span>
                     </h3>
@@ -303,12 +330,6 @@
                 <h3 class="text-sm font-bold tracking-widest text-gray-500 uppercase">TRUSTED BY</h3>
                 <div class="scroller mt-8">
                     <div class="scroller-inner">
-                        <img src="https://i.postimg.cc/HWrnj7H4/Vizari-Sports.png" alt="Vizari Sports Logo">
-                        <img src="https://i.postimg.cc/ZnG15Qmg/Store-Indya.jpg" alt="StoreIndya Logo">
-                        <img src="https://i.postimg.cc/qRRfbnQm/Bolaball.jpg" alt="BolaBall Logo">
-                        <img src="https://i.postimg.cc/wvbCSvG9/Red-cup.jpg" alt="RedCupLiving Logo">
-                        <img src="https://i.postimg.cc/J0DfmLfZ/Kottail.jpg" alt="Kottail Logo">
-                        
                         <img src="https://i.postimg.cc/HWrnj7H4/Vizari-Sports.png" alt="Vizari Sports Logo">
                         <img src="https://i.postimg.cc/ZnG15Qmg/Store-Indya.jpg" alt="StoreIndya Logo">
                         <img src="https://i.postimg.cc/qRRfbnQm/Bolaball.jpg" alt="BolaBall Logo">
@@ -334,7 +355,7 @@
                     <div class="gamified-card p-8 text-center flex flex-col items-center">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1000px-Amazon_logo.svg.png" alt="Amazon Logo" class="h-16 mb-4" style="filter: invert(1) grayscale(1) brightness(2);">
                         <h3 class="text-xl font-bold text-white mb-2">Amazon Web Services</h3>
-                        <p class="text-gray-400">E-commerce expertise and robust cloud solutions powered by the AWS Activate program.</p>
+                        <p class="text-gray-400">E-commerce expertise and robust AI infra powered by the AWS Activate program.</p>
                     </div>
                 </div>
             </div>
@@ -343,16 +364,16 @@
         <section id="about-product" class="py-20 bg-black/20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-extrabold text-white">Get Started in 3 Easy Steps</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Get Started in 3 Easy Steps</h2>
                     <p class="mt-4 text-lg text-gray-400">See how BigFig.AI transforms your data into actionable intelligence.</p>
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-16 items-start">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
                     <div x-data="{ tab: 1 }">
                         <div class="flex border-b border-[#3c3b44]">
-                            <button @click="tab = 1" :class="{ 'border-purple-500 text-white': tab === 1, 'border-transparent text-gray-400 hover:text-white': tab !== 1 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 1: Connect</button>
-                            <button @click="tab = 2" :class="{ 'border-purple-500 text-white': tab === 2, 'border-transparent text-gray-400 hover:text-white': tab !== 2 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 2: Review</button>
-                            <button @click="tab = 3" :class="{ 'border-purple-500 text-white': tab === 3, 'border-transparent text-gray-400 hover:text-white': tab !== 3 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 3: Grow</button>
+                            <button @click="tab = 1" :class="{ 'border-purple-500 text-white': tab === 1, 'border-transparent text-gray-400 hover:text-white': tab !== 1 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition text-sm sm:text-base">Step 1: Connect</button>
+                            <button @click="tab = 2" :class="{ 'border-purple-500 text-white': tab === 2, 'border-transparent text-gray-400 hover:text-white': tab !== 2 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition text-sm sm:text-base">Step 2: Review</button>
+                            <button @click="tab = 3" :class="{ 'border-purple-500 text-white': tab === 3, 'border-transparent text-gray-400 hover:text-white': tab !== 3 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition text-sm sm:text-base">Step 3: Grow</button>
                         </div>
                         <div class="mt-8">
                             <div x-show="tab === 1" x-transition>
@@ -373,7 +394,7 @@
                         </div>
                     </div>
 
-                    <div class="gamified-card p-8 sticky top-24">
+                    <div class="gamified-card p-6 sm:p-8 lg:sticky top-28">
                         <h3 class="text-2xl font-bold text-white">Request a Demo</h3>
                         <p class="mt-2 text-gray-400">Let's solve your problems together.</p>
                         <form class="mt-6 space-y-6">
@@ -407,24 +428,30 @@
         <section id="features" class="py-20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-extrabold text-white">Features</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Features</h2>
                     <p class="mt-4 text-lg text-gray-400">Get insights delivered in the customized dashboards.</p>
                 </div>
-                <div class="grid md:grid-cols-3 gap-8">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="gamified-card highlight-card p-8 text-center">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <h3 class="text-xl font-bold text-white">Unified Data Connectors</h3>
-                        <p class="mt-4 text-gray-400">Seamlessly connect with all your data sources. Own data (Shopify, Amazon etc.), Team's communications (Excels, Emails, Chat Conversations) and Third-party data (market data, social media posts/comments etc.).</p>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        <h3 class="text-xl font-bold text-white">Unified E-Commerce View</h3>
+                        <p class="mt-4 text-gray-400">Connect and unify your data across platforms: your own sources (Shopify, Amazon, Walmart/Flipkart, Q-Commerce), team communications (spreadsheets, emails, chats) and third-party signals (market data, social media, reviews). All available in one place.</p>
                     </div>
                     <div class="gamified-card highlight-card p-8 text-center" style="animation-delay: 0.3s;">
-                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        <h3 class="text-xl font-bold text-white">Personalized Dashboards</h3>
-                        <p class="mt-4 text-gray-400">Context aware and customizable dashboards. Get critical product, market and fulfillment insights on a personalized dashboard that surfaces what matters most to your business.</p>
+                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 0 0 2.25-2.25V8.25a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 8.25v7.5A2.25 2.25 0 0 0 6.75 18Z" />
+                        </svg>
+                        <h3 class="text-xl font-bold text-white">Personalized AI Agents</h3>
+                        <p class="mt-4 text-gray-400">Deploy AI agents purpose-built for your eCommerce operations: Category Leader, Data Analyst, Marketing Manager, Warehouse Manager. They work 24/7 to simplify decisions, automate tasks, and surface insights so your team can focus on growth.</p>
                     </div>
                     <div class="gamified-card highlight-card p-8 text-center" style="animation-delay: 0.6s;">
-                         <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                         <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" />
+                        </svg>
                         <h3 class="text-xl font-bold text-white">Smart Recommendations</h3>
-                        <p class="mt-4 text-gray-400">Find deeper correlations with data. Receive intelligent, actionable recommendations that can be executed using BigFig.AI tools to improve efficiency and boost sales on e-commerce channels.</p>
+                        <p class="mt-4 text-gray-400">Uncover hidden patterns and correlations across your eCommerce data. Receive intelligent, actionable recommendations that can be executed using BigFig.AI tools to boost efficiency, optimize operations and drive more sales.</p>
                     </div>
                 </div>
             </div>
@@ -432,12 +459,16 @@
         
         <section id="team" class="py-20">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-extrabold text-white">Minds Behind the Magic</h2>
-                    <div class="inline-block w-24 h-1 bg-purple-500 rounded-full mt-4"></div>
-                    <p class="mt-6 text-lg text-gray-300">Our leadership has worked with Amazon, Flipkart and Microsoft</p>
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Minds Behind the Magic</h2>
+                    <div class="mt-8 mb-8 inline-flex items-center gap-x-3 bg-gradient-to-r from-gray-900 via-purple-950/30 to-gray-900 backdrop-blur-sm border border-purple-500/30 rounded-full px-4 py-2 shadow-lg shadow-purple-500/10 max-w-full">
+                        <svg class="w-5 h-5 text-purple-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
+                        </svg>
+                        <span class="text-sm font-medium text-gray-200 text-center">Our DNA: Built in Tech & eCommerce at Amazon, Flipkart & Microsoft</span>
+                    </div>
                 </div>
-                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     <div class="gamified-card p-8 text-center">
                         <img class="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 object-cover" src="https://i.postimg.cc/RhqYghqx/sachin.jpg" alt="Sachin Jain">
                         <h3 class="mt-6 text-xl font-semibold text-white">Sachin Jain</h3>
@@ -463,7 +494,7 @@
         <section id="pricing" class="py-20 bg-black/20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-extrabold text-white">Choose Your Plan</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Choose Your Plan</h2>
                     <p class="mt-4 text-lg text-gray-400">Start with a free trial. Upgrade as you grow.</p>
                 </div>
                 <div class="grid lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
@@ -476,7 +507,8 @@
                             </div>
                             <p class="text-gray-400 -mt-4 mb-6">For Freelancers & Individuals</p>
                             <ul class="space-y-4 text-gray-400">
-                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>1 product-category analysis</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>1 agent access</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>1 deep product review</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>14-day report access</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Basic insights & recommendations</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Email support</span></li>
@@ -496,11 +528,12 @@
                                 <p class="text-gray-400 -mt-4 mb-6">For SMBs & Agencies</p>
                                 <p class="text-sm font-semibold text-gray-300 mb-4">Everything in Trial, plus:</p>
                                 <ul class="space-y-4 text-gray-400">
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>3 custom agents access</span></li>
                                     <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom analysis volume</span></li>
                                     <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Lifetime access to reports</span></li>
                                     <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Advanced AI recommendations</span></li>
-                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>A/B testing suggestions</span></li>
-                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Creative insights dashboard</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>A/B testing and simulations</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>360-degree product dashboard</span></li>
                                     <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom brand guidelines</span></li>
                                     <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Priority support</span></li>
                                 </ul>
@@ -518,8 +551,8 @@
                             <p class="text-gray-400 -mt-4 mb-6">For Brands</p>
                              <p class="text-sm font-semibold text-gray-300 mb-4">Everything in Growth, plus:</p>
                             <ul class="space-y-4 text-gray-400">
-                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Unlimited analysis requests</span></li>
-                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom AI model training</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Unlimited agent access</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Vertical AI trained models</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Dedicated account manager</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Enterprise-grade insights</span></li>
                                <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Launch analysis reports</span></li>
@@ -536,34 +569,34 @@
         <section id="faq" class="py-20">
             <div class="container mx-auto px-6 max-w-3xl">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-extrabold text-white">Frequently Asked Questions</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Frequently Asked Questions</h2>
                 </div>
                 <div class="space-y-4" x-data="{ open: 1 }">
                     <div class="gamified-card">
                         <button @click="open = (open === 1 ? null : 1)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
                             <span class="text-lg font-semibold text-white">What is BigFig.AI?</span>
-                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 1}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform flex-shrink-0" :class="{'rotate-180': open === 1}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div x-show="open === 1" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>BigFig.AI is an AI-powered commerce intelligence platform. It connects all your business data from sales and inventory on platforms like Amazon and Shopify, to customer communications over email and chat, to third-party market data and transforms it into actionable insights and recommendations to drive growth.</p></div>
                     </div>
                     <div class="gamified-card">
                         <button @click="open = (open === 2 ? null : 2)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
                             <span class="text-lg font-semibold text-white">How does BigFig.AI improve my business efficiency?</span>
-                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 2}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform flex-shrink-0" :class="{'rotate-180': open === 2}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div x-show="open === 2" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>We improve efficiency by replacing guesswork with data-driven decisions. Instead of manually sifting through dozens of reports, you get a single, unified view of your business. Our platform provides insights on product performance, market trends, and fulfillment logistics, along with smart recommendations to help you optimize everything from inventory to marketing campaigns for both e-commerce and quick commerce.</p></div>
                     </div>
                     <div class="gamified-card">
                         <button @click="open = (open === 3 ? null : 3)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
                             <span class="text-lg font-semibold text-white">What kind of data can I connect?</span>
-                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 3}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform flex-shrink-0" :class="{'rotate-180': open === 3}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div x-show="open === 3" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>You can connect a wide range of data sources. This includes your first-party data like sales and inventory from platforms (Amazon, Walmart, Shopify, Woocommerce, Magento ...) and your D2C website. You can also connect communication data (emails, chats) and third-party data sources for category trends, customer demographics, and social media listening.</p></div>
                     </div>
                     <div class="gamified-card">
                         <button @click="open = (open === 4 ? null : 4)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
                             <span class="text-lg font-semibold text-white">Is my data secure with BigFig.AI?</span>
-                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 4}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform flex-shrink-0" :class="{'rotate-180': open === 4}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                         <div x-show="open === 4" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>Absolutely. Data security is our top priority. We use enterprise-grade security protocols to ensure your data is encrypted, secure, and confidential. We are committed to protecting your business intelligence.</p></div>
                     </div>
@@ -575,8 +608,8 @@
 
     <footer class="bg-black/20">
         <div class="container mx-auto px-6 py-12">
-            <div class="border-t border-[#3c3b44] pt-12 grid grid-cols-2 md:grid-cols-5 gap-8 text-sm">
-                <div class="col-span-2 md:col-span-2 pr-8">
+            <div class="border-t border-[#3c3b44] pt-12 grid grid-cols-1 gap-8 text-sm sm:grid-cols-2 md:grid-cols-5">
+                <div class="col-span-1 sm:col-span-2 md:col-span-2 pr-8">
                     <a href="#" class="flex items-center space-x-2 mb-4">
                         <img src="https://i.postimg.cc/9F0kL0V7/bigfiglogowhite.png" alt="BigFig.AI Logo" class="h-8 w-8">
                         <span class="text-xl font-bold text-white">BigFig.AI</span>
@@ -622,102 +655,104 @@
     <script>
         // Interactive particle background
         const canvas = document.getElementById('background-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-        let particlesArray;
+            let particlesArray;
 
-        const mouse = {
-            x: null,
-            y: null,
-            radius: (canvas.height/110) * (canvas.width/110)
-        }
-
-        window.addEventListener('mousemove', function(event) {
-            mouse.x = event.x;
-            mouse.y = event.y;
-        });
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
+            const mouse = {
+                x: null,
+                y: null,
+                radius: (canvas.height/110) * (canvas.width/110)
             }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
-                ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) {
-                    this.directionX = -this.directionX;
+
+            window.addEventListener('mousemove', function(event) {
+                mouse.x = event.x;
+                mouse.y = event.y;
+            });
+
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
                 }
-                if (this.y > canvas.height || this.y < 0) {
-                    this.directionY = -this.directionY;
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
+                    ctx.fill();
                 }
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx*dx + dy*dy);
-                if (distance < mouse.radius + this.size) {
-                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                        this.x += 5;
+                update() {
+                    if (this.x > canvas.width || this.x < 0) {
+                        this.directionX = -this.directionX;
                     }
-                    if (mouse.x > this.x && this.x > this.size * 10) {
-                        this.x -= 5;
+                    if (this.y > canvas.height || this.y < 0) {
+                        this.directionY = -this.directionY;
                     }
-                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                        this.y += 5;
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouse.radius + this.size) {
+                        if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                            this.x += 5;
+                        }
+                        if (mouse.x > this.x && this.x > this.size * 10) {
+                            this.x -= 5;
+                        }
+                        if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                            this.y += 5;
+                        }
+                        if (mouse.y > this.y && this.y > this.size * 10) {
+                            this.y -= 5;
+                        }
                     }
-                    if (mouse.y > this.y && this.y > this.size * 10) {
-                        this.y -= 5;
-                    }
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
                 }
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
             }
-        }
 
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * .4) - 0.2;
-                let directionY = (Math.random() * .4) - 0.2;
-                let color = '#A78BFA';
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            function init() {
+                particlesArray = [];
+                let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * .4) - 0.2;
+                    let directionY = (Math.random() * .4) - 0.2;
+                    let color = '#A78BFA';
+                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+                }
             }
-        }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0,0,innerWidth, innerHeight);
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0,0,innerWidth, innerHeight);
 
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
             }
-        }
 
-        init();
-        animate();
-
-        window.addEventListener('resize', function() {
-            canvas.width = innerWidth;
-            canvas.height = innerHeight;
-            mouse.radius = (canvas.height/110) * (canvas.width/110);
             init();
-        });
+            animate();
 
-        // Simple intersection observer for fade-in animations
+            window.addEventListener('resize', function() {
+                canvas.width = innerWidth;
+                canvas.height = innerHeight;
+                mouse.radius = (canvas.height/110) * (canvas.width/110);
+                init();
+            });
+        }
+
+        // Fade-in section observer
         document.addEventListener('DOMContentLoaded', () => {
             const sections = document.querySelectorAll('section');
             const observer = new IntersectionObserver(entries => {
@@ -732,6 +767,25 @@
             sections.forEach(section => {
                 observer.observe(section);
             });
+        });
+
+        // Scroller duplication logic
+        window.addEventListener('load', () => {
+            const scroller = document.querySelector(".scroller");
+
+            if (scroller) {
+                const scrollerInner = scroller.querySelector(".scroller-inner");
+                const scrollerContent = Array.from(scrollerInner.children);
+
+                // Duplicate the content multiple times for seamless loop
+                for (let i = 0; i < 2; i++) {
+                    scrollerContent.forEach(item => {
+                        const duplicatedItem = item.cloneNode(true);
+                        duplicatedItem.setAttribute("aria-hidden", true);
+                        scrollerInner.appendChild(duplicatedItem);
+                    });
+                }
+            }
         });
     </script>
 
