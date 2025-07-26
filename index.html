@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigFig.AI - Level Up Your E-Commerce Intelligence</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+
+
+    <style>
+        /* Custom styles for the page */
+        :root {
+            --glow-purple: #A78BFA;
+            --glow-green: #4ADE80;
+            --bg-color: #1C1B22;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #E5E7EB;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Gradient text effect */
+        .gradient-text {
+            background: linear-gradient(90deg, #A78BFA, #E0E0E0); /* Updated purple-to-white gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* NEW: Glowing text animation */
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 8px rgba(167, 139, 250, 0.4), 0 0 12px rgba(167, 139, 250, 0.3); }
+            50% { text-shadow: 0 0 16px rgba(167, 139, 250, 0.8), 0 0 24px rgba(167, 139, 250, 0.6); }
+        }
+        .animated-text-glow {
+            animation: textGlow 4s ease-in-out infinite;
+        }
+        
+        /* New CTA Button Styles */
+        .cta-base {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700; /* Bold */
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .cta-primary {
+            background-color: #374151; /* Dark gray background */
+            color: #F9FAFB; /* Almost white text */
+            border-color: #4B5563; /* Subtle border */
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--glow-purple), var(--glow-green));
+        }
+
+        .cta-secondary {
+            background-color: transparent;
+            color: #E5E7EB;
+            border-color: #4B5563;
+        }
+
+        .cta-secondary:hover {
+            background-color: #374151;
+            border-color: #9CA3AF;
+            transform: translateY(-3px);
+        }
+        
+        /* Custom border with gradient */
+        .gradient-border {
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--glow-purple), var(--glow-green));
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+        }
+
+        /* Partner logo scrolling animation */
+        .scroller {
+            max-width: 100%;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #fff 20%, #fff 80%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #fff 20%, #fff 80%, transparent);
+        }
+        .scroller-inner {
+            display: flex;
+            gap: 4rem; /* Increased gap for fewer logos */
+            width: max-content;
+            animation: scroll 30s linear infinite;
+        }
+        .scroller-inner img {
+            height: 60px; /* Increased from 40px */
+            max-width: 180px; /* Optional: adjust max-width as well */
+            object-fit: contain; /* Ensure logos fit well */
+            filter: grayscale(1) brightness(1.5);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .scroller-inner img:hover {
+            filter: grayscale(0) brightness(1);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        @keyframes scroll {
+            to {
+                transform: translateX(calc(-50% - 2rem)); /* Adjusted for new gap */
+            }
+        }
+
+        /* Fade-in animation on scroll */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-section {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        /* Gamified Card Styles */
+        .gamified-card {
+            background-color: rgba(42, 41, 51, 0.8);
+            backdrop-filter: blur(5px);
+            border-radius: 0.75rem;
+            border: 1px solid #3c3b44;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .gamified-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none; /* FIX: Allows clicking through this layer to the form below */
+        }
+        .gamified-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.2);
+            border-color: var(--glow-purple);
+        }
+        .gamified-card:hover:before {
+            opacity: 1;
+        }
+
+        /* Highlighted Feature Card */
+        .highlight-card {
+             box-shadow: 0 0 25px rgba(167, 139, 250, 0.2);
+             animation: pulseGlow 4s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px rgba(167, 139, 250, 0.2); }
+            to { box-shadow: 0 0 35px rgba(167, 139, 250, 0.4); }
+        }
+
+        /* Video placeholder styles */
+        .video-placeholder {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 2px solid #374151;
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        .video-placeholder:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 60px rgba(139, 92, 246, 0.5);
+        }
+        .video-placeholder::before {
+            content: '';
+            display: block;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .video-placeholder .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        .video-placeholder:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(139, 92, 246, 0.8);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <canvas id="background-canvas"></canvas>
+
+    <header class="sticky top-0 z-50 bg-[#1C1B22]/80 backdrop-blur-lg border-b border-white/10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img src="https://i.postimg.cc/9F0kL0V7/bigfiglogowhite.png" alt="BigFig.AI Logo" class="h-10 w-10">
+                <span class="text-2xl font-bold text-white">BigFig.AI</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#about-product" class="text-gray-300 hover:text-white transition px-2">About Product</a>
+                <a href="#features" class="text-gray-300 hover:text-white transition px-2">Features</a>
+                <a href="#pricing" class="text-gray-300 hover:text-white transition px-2">Pricing</a>
+                <a href="#faq" class="text-gray-300 hover:text-white transition px-2">FAQs</a>
+                <a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="cta-base cta-primary px-6 py-2 ml-4">
+                    Book a demo
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="py-20 md:pb-10 md:pt-28">
+            <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="text-center lg:text-left">
+                        <div class="inline-flex items-center gap-x-3 bg-gradient-to-r from-gray-900 via-purple-950/30 to-gray-900 backdrop-blur-sm border border-purple-500/30 rounded-full px-4 py-2 mb-6 shadow-lg shadow-purple-500/10">
+                            <svg class="w-5 h-5 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.528l-.282.851-.282-.851a3.375 3.375 0 00-2.28-2.28l-.851-.282.851-.282a3.375 3.375 0 002.28-2.28l.282-.851.282.851a3.375 3.375 0 002.28 2.28l.851.282-.851.282a3.375 3.375 0 00-2.28 2.28z" />
+                            </svg>
+                           <span class="text-sm font-medium text-gray-200">Agentic AI powering e-commerce and brands</span>
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight text-white">
+                            Connect Data.<br>
+                            Unlock Insights.<br>
+                            <span class="gradient-text whitespace-nowrap">Drive Outcomes.</span>
+                        </h1>
+                        <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0">
+                            Get actionable growth tips for channels like Amazon, Shopify & more, right to your workspace email or Slack with one-click integrations.
+                        </p>
+                        <div class="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4">
+                            <a href="#" class="cta-base cta-primary w-full sm:w-auto">
+                                Get free insights →
+                            </a>
+                            <a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="cta-base cta-secondary w-full sm:w-auto">
+                                Book a demo
+                            </a>
+                        </div>
+                    </div>
+                    <div class="video-placeholder">
+                         <img src="https://placehold.co/1280x720/111827/374151?text=Product+Demo" class="absolute top-0 left-0 w-full h-full object-cover" alt="Product Video Thumbnail">
+                        <div class="play-button">
+                            <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3.222v13.556c0 .467.533.711.911.422l11.111-6.778a.5.5 0 000-.844L4.911 2.8c-.378-.289-.911-.045-.911.422z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 text-center">
+                    <h3 class="text-3xl font-semibold text-gray-300 leading-relaxed">
+                        We don’t just generate insights.<br>
+                        <span class="gradient-text font-bold animated-text-glow">We engineer intelligence.</span>
+                    </h3>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="py-16">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-sm font-bold tracking-widest text-gray-500 uppercase">TRUSTED BY</h3>
+                <div class="scroller mt-8">
+                    <div class="scroller-inner">
+                        <img src="https://i.postimg.cc/HWrnj7H4/Vizari-Sports.png" alt="Vizari Sports Logo">
+                        <img src="https://i.postimg.cc/ZnG15Qmg/Store-Indya.jpg" alt="StoreIndya Logo">
+                        <img src="https://i.postimg.cc/qRRfbnQm/Bolaball.jpg" alt="BolaBall Logo">
+                        <img src="https://i.postimg.cc/wvbCSvG9/Red-cup.jpg" alt="RedCupLiving Logo">
+                        <img src="https://i.postimg.cc/J0DfmLfZ/Kottail.jpg" alt="Kottail Logo">
+                        
+                        <img src="https://i.postimg.cc/HWrnj7H4/Vizari-Sports.png" alt="Vizari Sports Logo">
+                        <img src="https://i.postimg.cc/ZnG15Qmg/Store-Indya.jpg" alt="StoreIndya Logo">
+                        <img src="https://i.postimg.cc/qRRfbnQm/Bolaball.jpg" alt="BolaBall Logo">
+                        <img src="https://i.postimg.cc/wvbCSvG9/Red-cup.jpg" alt="RedCupLiving Logo">
+                        <img src="https://i.postimg.cc/J0DfmLfZ/Kottail.jpg" alt="Kottail Logo">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 text-center">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Backed by the Best</h2>
+                    <p class="mt-3 text-lg text-gray-400">We're proud to be supported by industry giants.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="gamified-card p-8 text-center flex flex-col items-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" alt="Google Logo" class="h-16 mb-4">
+                        <h3 class="text-xl font-bold text-white mb-2">Google for Startups</h3>
+                        <p class="text-gray-400">Strategic support and scalable cloud infrastructure through the Google for Startups Cloud Program.</p>
+                    </div>
+                    <div class="gamified-card p-8 text-center flex flex-col items-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1000px-Amazon_logo.svg.png" alt="Amazon Logo" class="h-16 mb-4" style="filter: invert(1) grayscale(1) brightness(2);">
+                        <h3 class="text-xl font-bold text-white mb-2">Amazon Web Services</h3>
+                        <p class="text-gray-400">E-commerce expertise and robust cloud solutions powered by the AWS Activate program.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about-product" class="py-20 bg-black/20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-extrabold text-white">Get Started in 3 Easy Steps</h2>
+                    <p class="mt-4 text-lg text-gray-400">See how BigFig.AI transforms your data into actionable intelligence.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-16 items-start">
+                    <div x-data="{ tab: 1 }">
+                        <div class="flex border-b border-[#3c3b44]">
+                            <button @click="tab = 1" :class="{ 'border-purple-500 text-white': tab === 1, 'border-transparent text-gray-400 hover:text-white': tab !== 1 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 1: Connect</button>
+                            <button @click="tab = 2" :class="{ 'border-purple-500 text-white': tab === 2, 'border-transparent text-gray-400 hover:text-white': tab !== 2 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 2: Review</button>
+                            <button @click="tab = 3" :class="{ 'border-purple-500 text-white': tab === 3, 'border-transparent text-gray-400 hover:text-white': tab !== 3 }" class="flex-1 py-4 px-2 text-center font-semibold border-b-2 transition">Step 3: Grow</button>
+                        </div>
+                        <div class="mt-8">
+                            <div x-show="tab === 1" x-transition>
+                                <h3 class="text-2xl font-bold text-white">Connect Your Data</h3>
+                                <p class="mt-2 text-gray-400">Link your e-commerce platforms, analytics, and communication channels in minutes.</p>
+                                <img src="https://placehold.co/600x400/1F2937/A78BFA?text=Step+1:+Connect" alt="Connect Data" class="mt-4 rounded-lg shadow-lg w-full">
+                            </div>
+                            <div x-show="tab === 2" x-transition>
+                                <h3 class="text-2xl font-bold text-white">Review Your Insights</h3>
+                                <p class="mt-2 text-gray-400">Our AI generates personalized dashboards highlighting market trends, customer behavior, and sales opportunities.</p>
+                                <img src="https://placehold.co/600x400/1F2937/4ADE80?text=Step+2:+Review" alt="Review Insights" class="mt-4 rounded-lg shadow-lg w-full">
+                            </div>
+                            <div x-show="tab === 3" x-transition>
+                                <h3 class="text-2xl font-bold text-white">Implement & Grow</h3>
+                                <p class="mt-2 text-gray-400">Use our smart tools and actionable recommendations to execute strategies that scale your business.</p>
+                                <img src="https://placehold.co/600x400/1F2937/8B5CF6?text=Step+3:+Grow" alt="Implement and Grow" class="mt-4 rounded-lg shadow-lg w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gamified-card p-8 sticky top-24">
+                        <h3 class="text-2xl font-bold text-white">Request a Demo</h3>
+                        <p class="mt-2 text-gray-400">Let's solve your problems together.</p>
+                        <form class="mt-6 space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
+                                <input type="text" id="name" name="name" required class="mt-1 block w-full bg-[#3c3b44] border-[#4a4953] rounded-md shadow-sm py-3 px-4 text-white focus:border-purple-500 transition">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-300">Working Email</label>
+                                <input type="email" id="email" name="email" required class="mt-1 block w-full bg-[#3c3b44] border-[#4a4953] rounded-md shadow-sm py-3 px-4 text-white focus:border-purple-500 transition">
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-gray-300">Company Name</label>
+                                <input type="text" id="company" name="company" class="mt-1 block w-full bg-[#3c3b44] border-[#4a4953] rounded-md shadow-sm py-3 px-4 text-white focus:border-purple-500 transition">
+                            </div>
+                            <div>
+                                <label for="problem" class="block text-sm font-medium text-gray-300">Problem you are facing</label>
+                                <textarea id="problem" name="problem" rows="4" required class="mt-1 block w-full bg-[#3c3b44] border-[#4a4953] rounded-md shadow-sm py-3 px-4 text-white focus:border-purple-500 transition"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="cta-base cta-primary w-full py-3">
+                                    Submit Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-white">Features</h2>
+                    <p class="mt-4 text-lg text-gray-400">Get insights delivered in the customized dashboards.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="gamified-card highlight-card p-8 text-center">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <h3 class="text-xl font-bold text-white">Unified Data Connectors</h3>
+                        <p class="mt-4 text-gray-400">Seamlessly connect with all your data sources. Own data (Shopify, Amazon etc.), Team's communications (Excels, Emails, Chat Conversations) and Third-party data (market data, social media posts/comments etc.).</p>
+                    </div>
+                    <div class="gamified-card highlight-card p-8 text-center" style="animation-delay: 0.3s;">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <h3 class="text-xl font-bold text-white">Personalized Dashboards</h3>
+                        <p class="mt-4 text-gray-400">Context aware and customizable dashboards. Get critical product, market and fulfillment insights on a personalized dashboard that surfaces what matters most to your business.</p>
+                    </div>
+                    <div class="gamified-card highlight-card p-8 text-center" style="animation-delay: 0.6s;">
+                         <svg class="w-12 h-12 mx-auto mb-4 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <h3 class="text-xl font-bold text-white">Smart Recommendations</h3>
+                        <p class="mt-4 text-gray-400">Find deeper correlations with data. Receive intelligent, actionable recommendations that can be executed using BigFig.AI tools to improve efficiency and boost sales on e-commerce channels.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="team" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-white">Minds Behind the Magic</h2>
+                    <div class="inline-block w-24 h-1 bg-purple-500 rounded-full mt-4"></div>
+                    <p class="mt-6 text-lg text-gray-300">Our leadership has worked with Amazon, Flipkart and Microsoft</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="gamified-card p-8 text-center">
+                        <img class="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 object-cover" src="https://i.postimg.cc/RhqYghqx/sachin.jpg" alt="Sachin Jain">
+                        <h3 class="mt-6 text-xl font-semibold text-white">Sachin Jain</h3>
+                        <p class="text-gray-400">Founder and CEO</p>
+                        <p class="mt-4 text-gray-500 text-sm">With a rich background in building and scaling successful tech ventures, Sachin leads BigFig.AI with a clear vision - "To simplify the complexity of e-commerce data and provide businesses with a powerful co-pilot for growth".</p>
+                    </div>
+                    <div class="gamified-card p-8 text-center">
+                        <img class="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 object-cover" src="https://i.postimg.cc/sXjqZwrX/Aditya.jpg" alt="Aditya Negi">
+                        <h3 class="mt-6 text-xl font-semibold text-white">Aditya Negi</h3>
+                        <p class="text-gray-400">GTM Advisor</p>
+                        <p class="mt-4 text-gray-500 text-sm">A seasoned Go-To-Market strategist, Aditya excels in positioning innovative technologies for commercial success. He provides invaluable guidance on market strategy, ensuring BigFig.AI anticipates the evolving needs of e-commerce.</p>
+                    </div>
+                    <div class="gamified-card p-8 text-center">
+                        <img class="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 object-cover" src="https://i.postimg.cc/zBxMwKzk/Parag.jpg" alt="Parag Sharma">
+                        <h3 class="mt-6 text-xl font-semibold text-white">Parag Sharma</h3>
+                        <p class="text-gray-400">Product Head</p>
+                        <p class="mt-4 text-gray-500 text-sm">Parag is an enthusiastic product visionary with a talent for understanding the user's perspective. He is the driving force behind the platform, ensuring every feature is crafted with a seamless and intuitive user experience in mind.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="py-20 bg-black/20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-white">Choose Your Plan</h2>
+                    <p class="mt-4 text-lg text-gray-400">Start with a free trial. Upgrade as you grow.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
+                    
+                    <div class="gamified-card p-8 flex flex-col">
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold text-white">Trial</h3>
+                                <p class="text-3xl font-extrabold text-white">$0</p>
+                            </div>
+                            <p class="text-gray-400 -mt-4 mb-6">For Freelancers & Individuals</p>
+                            <ul class="space-y-4 text-gray-400">
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>1 product-category analysis</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>14-day report access</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Basic insights & recommendations</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Email support</span></li>
+                            </ul>
+                        </div>
+                        <a href="#" class="cta-base cta-primary mt-8 block w-full">Start Trial</a>
+                    </div>
+                    
+                    <div class="p-1 rounded-xl gradient-border relative">
+                         <div class="bg-[#1C1B22] p-8 rounded-lg h-full flex flex-col">
+                            <span class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-4 py-1 text-sm font-bold text-white bg-purple-600 rounded-full">MOST POPULAR</span>
+                            <div class="flex-grow">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-2xl font-bold text-white">Growth</h3>
+                                    <p class="text-xl font-bold text-purple-400">Let's Chat</p>
+                                </div>
+                                <p class="text-gray-400 -mt-4 mb-6">For SMBs & Agencies</p>
+                                <p class="text-sm font-semibold text-gray-300 mb-4">Everything in Trial, plus:</p>
+                                <ul class="space-y-4 text-gray-400">
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom analysis volume</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Lifetime access to reports</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Advanced AI recommendations</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>A/B testing suggestions</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Creative insights dashboard</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom brand guidelines</span></li>
+                                    <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Priority support</span></li>
+                                </ul>
+                            </div>
+                            <a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="cta-base cta-primary mt-8 block w-full">Book a demo</a>
+                        </div>
+                    </div>
+
+                    <div class="gamified-card p-8 flex flex-col">
+                        <div class="flex-grow">
+                             <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-2xl font-bold text-white">Pro</h3>
+                                <p class="text-xl font-bold text-purple-400">Let's Chat</p>
+                            </div>
+                            <p class="text-gray-400 -mt-4 mb-6">For Brands</p>
+                             <p class="text-sm font-semibold text-gray-300 mb-4">Everything in Growth, plus:</p>
+                            <ul class="space-y-4 text-gray-400">
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Unlimited analysis requests</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Custom AI model training</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Dedicated account manager</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Enterprise-grade insights</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Launch analysis reports</span></li>
+                               <li class="flex items-start"><svg class="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Winning combinations report</span></li>
+                            </ul>
+                        </div>
+                        <p class="text-center text-sm text-purple-300 italic mt-6">Full power — enterprise-grade features with personal support.</p>
+                        <a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="cta-base cta-primary mt-4 block w-full">Book a demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="py-20">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-white">Frequently Asked Questions</h2>
+                </div>
+                <div class="space-y-4" x-data="{ open: 1 }">
+                    <div class="gamified-card">
+                        <button @click="open = (open === 1 ? null : 1)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-semibold text-white">What is BigFig.AI?</span>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 1}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open === 1" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>BigFig.AI is an AI-powered commerce intelligence platform. It connects all your business data from sales and inventory on platforms like Amazon and Shopify, to customer communications over email and chat, to third-party market data and transforms it into actionable insights and recommendations to drive growth.</p></div>
+                    </div>
+                    <div class="gamified-card">
+                        <button @click="open = (open === 2 ? null : 2)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-semibold text-white">How does BigFig.AI improve my business efficiency?</span>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 2}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open === 2" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>We improve efficiency by replacing guesswork with data-driven decisions. Instead of manually sifting through dozens of reports, you get a single, unified view of your business. Our platform provides insights on product performance, market trends, and fulfillment logistics, along with smart recommendations to help you optimize everything from inventory to marketing campaigns for both e-commerce and quick commerce.</p></div>
+                    </div>
+                    <div class="gamified-card">
+                        <button @click="open = (open === 3 ? null : 3)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-semibold text-white">What kind of data can I connect?</span>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 3}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open === 3" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>You can connect a wide range of data sources. This includes your first-party data like sales and inventory from platforms (Amazon, Walmart, Shopify, Woocommerce, Magento ...) and your D2C website. You can also connect communication data (emails, chats) and third-party data sources for category trends, customer demographics, and social media listening.</p></div>
+                    </div>
+                    <div class="gamified-card">
+                        <button @click="open = (open === 4 ? null : 4)" class="w-full flex justify-between items-center p-6 text-left rounded-lg hover:bg-white/5 transition-colors">
+                            <span class="text-lg font-semibold text-white">Is my data secure with BigFig.AI?</span>
+                            <svg class="w-6 h-6 text-gray-400 transition-transform transform" :class="{'rotate-180': open === 4}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open === 4" x-collapse.duration.500ms class="px-6 pb-6 text-gray-400"><p>Absolutely. Data security is our top priority. We use enterprise-grade security protocols to ensure your data is encrypted, secure, and confidential. We are committed to protecting your business intelligence.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-black/20">
+        <div class="container mx-auto px-6 py-12">
+            <div class="border-t border-[#3c3b44] pt-12 grid grid-cols-2 md:grid-cols-5 gap-8 text-sm">
+                <div class="col-span-2 md:col-span-2 pr-8">
+                    <a href="#" class="flex items-center space-x-2 mb-4">
+                        <img src="https://i.postimg.cc/9F0kL0V7/bigfiglogowhite.png" alt="BigFig.AI Logo" class="h-8 w-8">
+                        <span class="text-xl font-bold text-white">BigFig.AI</span>
+                    </a>
+                    <p class="text-gray-400">Your AI-powered co-pilot for e-commerce growth.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white tracking-wider uppercase mb-4">Product</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white transition">Pricing</a></li>
+                        <li><a href="https://calendly.com/sachin-ldq/demo-with-bigfig-ai" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition">Book a Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white tracking-wider uppercase mb-4">Resources</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white tracking-wider uppercase mb-4">Legal</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 border-t border-[#3c3b44] pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">© 2025 BigFig.AI. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 sm:mt-0">
+                    <a href="https://www.linkedin.com/company/bigfigai/posts/?feedView=all" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition">
+                        <span class="sr-only">LinkedIn</span>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Interactive particle background
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        const mouse = {
+            x: null,
+            y: null,
+            radius: (canvas.height/110) * (canvas.width/110)
+        }
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                        this.x += 5;
+                    }
+                    if (mouse.x > this.x && this.x > this.size * 10) {
+                        this.x -= 5;
+                    }
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                        this.y += 5;
+                    }
+                    if (mouse.y > this.y && this.y > this.size * 10) {
+                        this.y -= 5;
+                    }
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * .4) - 0.2;
+                let directionY = (Math.random() * .4) - 0.2;
+                let color = '#A78BFA';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0,0,innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            mouse.radius = (canvas.height/110) * (canvas.width/110);
+            init();
+        });
+
+        // Simple intersection observer for fade-in animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-section');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
