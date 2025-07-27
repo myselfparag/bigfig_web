@@ -117,12 +117,6 @@
             width: max-content;
             animation: scroll 30s linear infinite;
         }
-        /* FIX: Speed up animation on mobile */
-        @media (max-width: 767px) {
-            .scroller-inner {
-                animation-duration: 20s;
-            }
-        }
         .scroller:hover .scroller-inner {
             animation-play-state: paused;
         }
@@ -142,15 +136,21 @@
             transform: scale(1.1);
         }
         
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
+       @keyframes scroll {
+        0% {
+            transform: translateX(0);
         }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
 
+/* Mobile-specific faster animation */
+@media (max-width: 768px) {
+    .scroller-inner {
+        animation: scroll 15s linear infinite !important;
+    }
+}
         /* Fade-in animation on scroll */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
@@ -802,13 +802,14 @@
                 const scrollerInner = scroller.querySelector(".scroller-inner");
                 const scrollerContent = Array.from(scrollerInner.children);
 
-                // FIX: Duplicate the content only ONCE for a seamless loop.
-                // The original method of duplicating twice was incorrect for the CSS animation.
-                scrollerContent.forEach(item => {
-                    const duplicatedItem = item.cloneNode(true);
-                    duplicatedItem.setAttribute("aria-hidden", true);
-                    scrollerInner.appendChild(duplicatedItem);
-                });
+                // Duplicate the content multiple times for seamless loop
+                for (let i = 0; i < 2; i++) {
+                    scrollerContent.forEach(item => {
+                        const duplicatedItem = item.cloneNode(true);
+                        duplicatedItem.setAttribute("aria-hidden", true);
+                        scrollerInner.appendChild(duplicatedItem);
+                    });
+                }
             }
         });
     </script>
